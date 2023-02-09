@@ -9,10 +9,64 @@
  */
 
 // TODO Votre code ici.
-try {
-    ...
+$server = 'localhost';
+$user = 'root';
+$password = '';
+$db = 'bdd_cours';
+
+function sanitize($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    $data = addslashes($data);
+    return $data;
 }
-catch...
+
+try {
+
+    $maConnexion = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $user, $password);
+    $maConnexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $nom = sanitize('Matte');
+    $prenom = sanitize('Marmotte');
+    $rue = sanitize('Rue du tiffon');
+    $numero = sanitize('4');
+    $code_postal = sanitize('59610');
+    $ville = sanitize('Fourmies');
+    $pays = sanitize('France');
+    $mail = sanitize('m.marmotte@gmail.com');
+
+
+    $user = $maConnexion->prepare("
+         INSERT INTO utilisateur (nom, prenom, rue, numero, code_postal, ville, pays, mail)
+         VALUES (:Matte, :Marmotte, :Rue du tiffon, :4, :59610, :Fourmies, :France, :m.marmotte@gmail.com)
+    ");
+
+    $user->bindParam(':Matte', $nom);
+    $user->bindParam(':Marmotte', $prenom);
+    $user->bindParam(':Rue du tiffon', $rue);
+    $user->bindParam(':4', $numero);
+    $user->bindParam(':59610', $code_postal,PDO::PARAM_INT);
+    $user->bindParam(':Fourmies', $vlle);
+    $user->bindParam(':France', $pays);
+    $user->bindParam(':m.marmotte@gmail.com', $mail);
+
+    $result = $maConnexion->exec($user);
+    echo $result;
+
+    $user = $maConnexion->prepare("
+         UPDATE user SET nom = :marc WHERE id = :4
+    ");
+
+    $user->bindParam(':4', $id);
+    $user->bindParam(':Marc', $nom);
+
+    $result = $maConnexion->exec($user);
+    echo $result;
+}
+catch (PDOException $exception) {
+    echo "Erreur de connexion: " . $exception->getMessage();
+}
 
 
 
